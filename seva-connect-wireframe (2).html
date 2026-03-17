@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEVĀ Connect — Advanced System Wireframe (HTML + CSS)</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================
+       ADVANCED WIREFRAME TEMPLATE
+       - Responsive
+       - Dark mode toggle
+       - Collapsible phases
+       - Sticky mini-map + scroll spy
+       - Printable (A4) + "export" hint
+       - Accessible focus states
+       ========================================= */
+
+    :root{
+      --bg: #f3f5f8;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15,23,42,.12);
+      --shadow: 0 18px 45px rgba(15,23,42,.12);
+      --shadow2: 0 10px 22px rgba(15,23,42,.10);
+
+      --teal: #0D6E6E;        /* Volunteer */
+      --violet: #7c3aed;      /* Platform */
+      --blue: #1d4ed8;        /* DS / Gov */
+      --gold: #C49A2A;        /* Gate */
+      --green: #16a34a;       /* Success */
+      --amber: #d97706;       /* Warn */
+      --red: #dc2626;         /* Danger */
+
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+
+      --mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+
+      --ring: 0 0 0 4px rgba(124,58,237,.20);
+    }
+
+    [data-theme="dark"]{
+      --bg: #0b1020;
+      --surface: rgba(255,255,255,.06);
+      --surface2: rgba(255,255,255,.04);
+      --ink: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(255,255,255,.14);
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+      --shadow2: 0 10px 22px rgba(0,0,0,.35);
+      --ring: 0 0 0 4px rgba(196,154,42,.18);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(900px 600px at 10% -10%, rgba(13,110,110,.18), transparent 55%),
+        radial-gradient(900px 600px at 90% 0%, rgba(124,58,237,.18), transparent 55%),
+        radial-gradient(1000px 700px at 80% 120%, rgba(196,154,42,.12), transparent 55%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    button{ font-family: inherit; }
+
+    /* Layout */
+    .app{
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 18px;
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 30%);
+      backdrop-filter: blur(12px);
+    }
+    .brand{
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 16px 16px 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+    }
+    .brand h1{
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 18px;
+      letter-spacing: .4px;
+      line-height: 1.2;
+    }
+    .brand h1 span{
+      color: var(--gold);
+      font-weight: 900;
+    }
+    .brand .sub{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .meta{
+      margin-top: 10px;
+      display: grid;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .side-actions{
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .btn{
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow2);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(196,154,42,.45); }
+    .btn:active{ transform: translateY(0); }
+    .btn:focus-visible{ outline: none; box-shadow: var(--shadow2), var(--ring); }
+    .btn .k{
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface2);
+    }
+
+    .legend{
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+    }
+    .legend .title{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .legend .title span{
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .chips{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      white-space: nowrap;
+    }
+    .dot{
+      width: 10px; height: 10px; border-radius: 4px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.08) inset;
+    }
+
+    .nav{
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+      padding: 12px;
+    }
+    .nav .label{
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      margin: 4px 2px 8px;
+    }
+    .nav a{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      color: var(--ink);
+      font-size: 13px;
+      gap: 10px;
+    }
+    .nav a small{
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface2);
+    }
+    .nav a:hover{
+      border-color: rgba(124,58,237,.25);
+      background: rgba(124,58,237,.07);
+    }
+    .nav a.active{
+      border-color: rgba(196,154,42,.45);
+      background: rgba(196,154,42,.12);
+    }
+
+    /* Main */
+    .main{
+      padding: 26px 26px 80px;
+    }
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    [data-theme="dark"] .topbar{ background: rgba(0,0,0,.22); }
+
+    .search{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .search input{
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--ink);
+      width: 100%;
+      font-size: 13px;
+    }
+    .search .hint{
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface2);
+      white-space: nowrap;
+    }
+
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      box-shadow: var(--shadow2);
+      transition: transform .15s ease, border-color .15s ease;
+      font-size: 13px;
+    }
+    .pill:hover{ transform: translateY(-1px); border-color: rgba(13,110,110,.35); }
+    .pill:focus-visible{ outline: none; box-shadow: var(--shadow2), var(--ring); }
+    .pill .mini{
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Sections (Phases) */
+    .phase{
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: clip;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+    }
+    .phase-head{
+      padding: 18px 18px;
+      background: linear-gradient(180deg, var(--surface2), transparent);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .phase-head:focus-visible{ outline: none; box-shadow: inset var(--ring); }
+    .phase-head .left{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .badge{
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      white-space: nowrap;
+    }
+    .badge.phase{ color: var(--gold); border-color: rgba(196,154,42,.35); }
+    .badge.actor{ color: var(--muted); }
+
+    .phase-title{
+      min-width: 0;
+    }
+    .phase-title h2{
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: .3px;
+    }
+    .phase-title p{
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .chev{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+      transition: transform .18s ease;
+      flex-shrink: 0;
+    }
+    .phase[aria-expanded="false"] .chev{ transform: rotate(-90deg); }
+
+    .phase-body{
+      padding: 18px;
+    }
+
+    /* Flow row + steps */
+    .flow{
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    .step{
+      flex: 1 1 210px;
+      min-width: 210px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--surface2), var(--surface));
+      box-shadow: var(--shadow2);
+      padding: 14px 14px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .step::before{
+      content: "";
+      position: absolute;
+      left: 0; top: 0; right: 0;
+      height: 4px;
+      background: var(--border);
+    }
+    .step.vol::before{ background: linear-gradient(90deg, var(--teal), rgba(13,110,110,.35)); }
+    .step.sys::before{ background: linear-gradient(90deg, var(--violet), rgba(124,58,237,.35)); }
+    .step.gov::before{ background: linear-gradient(90deg, var(--blue), rgba(29,78,216,.35)); }
+    .step.gate::before{ background: linear-gradient(90deg, var(--gold), rgba(196,154,42,.35)); }
+    .step.ok::before{ background: linear-gradient(90deg, var(--green), rgba(22,163,74,.35)); }
+    .step.warn::before{ background: linear-gradient(90deg, var(--amber), rgba(217,119,6,.35)); }
+    .step.danger::before{ background: linear-gradient(90deg, var(--red), rgba(220,38,38,.35)); }
+
+    .s-num{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+    .s-title{
+      margin: 0 0 6px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .2px;
+      line-height: 1.25;
+    }
+    .s-desc{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tags{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .tag{
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .tag b{ font-family: var(--mono); font-size: 10px; color: var(--muted); font-weight: 500; }
+    .tag.auto{ border-color: rgba(124,58,237,.25); background: rgba(124,58,237,.08); }
+    .tag.manual{ border-color: rgba(196,154,42,.28); background: rgba(196,154,42,.10); }
+    .tag.off{ border-style: dashed; opacity: .95; }
+
+    .connector{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+      color: var(--muted);
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    /* Screens */
+    .screens{
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .screen{
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow2);
+      overflow: hidden;
+      min-height: 230px;
+    }
+    .bar{ height: 7px; }
+    .bar.vol{ background: linear-gradient(90deg, var(--teal), rgba(13,110,110,.35)); }
+    .bar.sys{ background: linear-gradient(90deg, var(--violet), rgba(124,58,237,.35)); }
+    .bar.gov{ background: linear-gradient(90deg, var(--blue), rgba(29,78,216,.35)); }
+    .bar.gate{ background: linear-gradient(90deg, var(--gold), rgba(196,154,42,.35)); }
+
+    .screen .head{
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--surface2), transparent);
+    }
+    .screen .head .t{
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      margin: 0;
+    }
+    .screen .head .s{
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+    .screen .body{
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+    .ui-field{
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      padding: 9px 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .ui-card{
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      padding: 10px 10px;
+      display: grid;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ui-card::before{
+      content:"";
+      position:absolute; left:0; top:0; bottom:0; width:4px;
+      background: rgba(13,110,110,.45);
+    }
+    .ui-card .ct{
+      font-size: 11px; font-weight: 800; color: var(--ink);
+    }
+    .ui-card .cs{
+      font-size: 11px; color: var(--muted); line-height: 1.35;
+    }
+    .ui-btn{
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--teal);
+      color: #fff;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .2px;
+    }
+    .ui-btn.alt{ background: var(--gold); }
+    .ui-btn.sys{ background: var(--violet); }
+    .ui-btn.gov{ background: var(--blue); }
+
+    /* Gate / decision */
+    .decision{
+      margin-top: 14px;
+      border-radius: var(--radius-xl);
+      border: 1px dashed rgba(196,154,42,.55);
+      background: linear-gradient(180deg, rgba(196,154,42,.12), transparent);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .decision .h{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .decision .h .l{
+      display: grid;
+      gap: 4px;
+    }
+    .decision .h .l strong{
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: .2px;
+    }
+    .decision .h .l span{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .branches{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .branch{
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 12px;
+      box-shadow: var(--shadow2);
+      border-left: 4px solid var(--border);
+    }
+    .branch.pass{ border-left-color: var(--green); }
+    .branch.partial{ border-left-color: var(--amber); }
+    .branch.fail{ border-left-color: var(--red); }
+    .branch b{
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+      letter-spacing: .2px;
+    }
+    .branch p{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Tiny note */
+    .note{
+      margin-top: 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(217,119,6,.35);
+      background: rgba(217,119,6,.10);
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--ink);
+      box-shadow: var(--shadow2);
+    }
+    .note .i{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(217,119,6,.35);
+      background: rgba(217,119,6,.16);
+      flex: 0 0 auto;
+    }
+    .note p{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .app{ grid-template-columns: 1fr; }
+      .sidebar{
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .main{ padding: 18px 14px 70px; }
+      .screens{ grid-template-columns: 1fr; }
+      .branches{ grid-template-columns: 1fr; }
+    }
+
+    /* Print */
+    @media print{
+      body{ background: #fff; }
+      .sidebar, .topbar{ display: none !important; }
+      .main{ padding: 0 !important; }
+      .phase{ break-inside: avoid; box-shadow: none; }
+      .phase-body{ padding: 12px; }
+      .step, .screen, .branch, .note{ box-shadow: none; }
+      a{ text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>SEVĀ Connect — <span>Advanced</span></h1>
+        <div class="sub">System Flow Wireframe template (HTML + CSS). Responsive, collapsible phases, print-friendly, and easy to customize.</div>
+        <div class="meta">
+          <div>Version: 2.0</div>
+          <div>Date: Feb 2026</div>
+          <div>Mode: <span id="modeLabel">Light</span></div>
+        </div>
+      </div>
+
+      <div class="side-actions">
+        <button class="btn" id="toggleTheme" type="button" title="Toggle theme (T)">
+          <span>🌗 Toggle Theme</span>
+          <span class="k">T</span>
+        </button>
+        <button class="btn" id="toggleAll" type="button" title="Collapse/Expand all (E)">
+          <span>🧩 Expand/Collapse All</span>
+          <span class="k">E</span>
+        </button>
+        <button class="btn" id="printBtn" type="button" title="Print / Save as PDF (P)">
+          <span>🖨️ Print / Save PDF</span>
+          <span class="k">P</span>
+        </button>
+      </div>
+
+      <div class="legend">
+        <div class="title"><span>Legend</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted);">Actors</span></div>
+        <div class="chips">
+          <span class="chip"><span class="dot" style="background:var(--teal)"></span> Volunteer</span>
+          <span class="chip"><span class="dot" style="background:var(--violet)"></span> Platform</span>
+          <span class="chip"><span class="dot" style="background:var(--blue)"></span> DS / Gov</span>
+          <span class="chip"><span class="dot" style="background:var(--gold)"></span> Gate</span>
+        </div>
+        <div style="height:10px"></div>
+        <div class="title"><span>Tags</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted);">Hints</span></div>
+        <div class="chips">
+          <span class="chip">⚡ Automated</span>
+          <span class="chip">👤 Manual</span>
+          <span class="chip">🔌 Off-platform</span>
+          <span class="chip">✅ Success</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <div class="label">Jump to Phase</div>
+        <a href="#overview" data-target="overview"><span>Overview</span><small>00</small></a>
+        <a href="#p1" data-target="p1"><span>DS — Project Creation</span><small>01</small></a>
+        <a href="#p2" data-target="p2"><span>Volunteer — Onboarding</span><small>02</small></a>
+        <a href="#p3" data-target="p3"><span>System — Verification Gate</span><small>03</small></a>
+        <a href="#p4" data-target="p4"><span>Volunteer — Apply</span><small>04</small></a>
+        <a href="#p5" data-target="p5"><span>DS — Review</span><small>05</small></a>
+        <a href="#p6" data-target="p6"><span>Engagement — Completion</span><small>06</small></a>
+      </nav>
+
+      <div style="margin-top:12px; font-size:12px; color:var(--muted); line-height:1.5;">
+        <b style="color:var(--ink)">How to customize:</b><br/>
+        Replace the text inside each <span style="font-family:var(--mono)">.step</span> and <span style="font-family:var(--mono)">.screen</span>.
+        Duplicate phases for your own project modules.
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <div class="search">
+          <span style="opacity:.7">🔎</span>
+          <input id="q" placeholder="Search steps (ex: verification, apply, DS)"/>
+          <span class="hint">Ctrl / ⌘ + K</span>
+        </div>
+        <button class="pill" id="clear" type="button" title="Clear search">
+          🧹 <span>Clear</span> <span class="mini">Esc</span>
+        </button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <section class="phase" id="overview" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="overviewBody">
+          <div class="left">
+            <span class="badge phase">PHASE 00</span>
+            <div class="phase-title">
+              <h2>Overview — Two Sides of the Platform</h2>
+              <p>Volunteer (abroad) ↔ SEVĀ Connect platform ↔ Divisional Secretariat (local needs).</p>
+            </div>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="overviewBody">
+          <div class="flow">
+            <div class="step vol">
+              <div class="s-num">VOL · A</div>
+              <p class="s-title">Volunteer Side</p>
+              <p class="s-desc">Diaspora individuals or groups offering skills, time, and resources. Select sectors and availability.</p>
+              <div class="tags">
+                <span class="tag auto">⚡ <span>Personalized feed</span> <b>auto</b></span>
+                <span class="tag">🏥 Healthcare</span>
+                <span class="tag">💻 Tech</span>
+                <span class="tag">📚 Education</span>
+              </div>
+            </div>
+
+            <div class="connector" aria-hidden="true">⇄</div>
+
+            <div class="step sys">
+              <div class="s-num">SYS · A</div>
+              <p class="s-title">Platform Match Engine</p>
+              <p class="s-desc">Routes applications, validates listings, assigns verification tiers, and tracks engagements.</p>
+              <div class="tags">
+                <span class="tag auto">⚡ <span>Routing</span> <b>auto</b></span>
+                <span class="tag auto">⚡ <span>Scoring</span> <b>auto</b></span>
+                <span class="tag manual">👤 <span>Admin review</span> <b>manual</b></span>
+              </div>
+            </div>
+
+            <div class="connector" aria-hidden="true">⇄</div>
+
+            <div class="step gov">
+              <div class="s-num">DS · A</div>
+              <p class="s-title">Divisional Secretariat Side</p>
+              <p class="s-desc">Identifies community needs, creates project listings, interviews candidates, and logs outcomes.</p>
+              <div class="tags">
+                <span class="tag manual">👤 <span>Ground survey</span> <b>manual</b></span>
+                <span class="tag">📍 District</span>
+                <span class="tag">⏱️ Urgency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 1 -->
+      <section class="phase" id="p1" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p1Body">
+          <div class="left">
+            <span class="badge phase">PHASE 01</span>
+            <div class="phase-title">
+              <h2>DS Side — Project Creation & Publication</h2>
+              <p>Create and publish community needs. Structured listing → platform validation → publish.</p>
+            </div>
+            <span class="badge actor">🏛️ DS / Gov</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p1Body">
+          <div class="flow">
+            <div class="step gov">
+              <div class="s-num">DS · 01</div>
+              <p class="s-title">DS Registration</p>
+              <p class="s-desc">DS registers using official credentials (verified by central admin).</p>
+              <div class="tags"><span class="tag manual">👤 <span>Admin verified</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gov">
+              <div class="s-num">DS · 02</div>
+              <p class="s-title">Identify Community Need</p>
+              <p class="s-desc">Define the problem (sector, location, urgency, expected impact).</p>
+              <div class="tags"><span class="tag manual">👤 <span>Field check</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gov">
+              <div class="s-num">DS · 03</div>
+              <p class="s-title">Create Project Listing</p>
+              <p class="s-desc">Fill structured form: skills, engagement type (remote/on-site), duration, volunteer count.</p>
+              <div class="tags"><span class="tag">🧾 Form</span><span class="tag">🗺️ Location</span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step sys">
+              <div class="s-num">SYS · 01</div>
+              <p class="s-title">Validate & Publish</p>
+              <p class="s-desc">Completeness checks + quick admin review → listing becomes visible on the board.</p>
+              <div class="tags">
+                <span class="tag auto">⚡ <span>Validation</span> <b>auto</b></span>
+                <span class="tag manual">👤 <span>Review</span> <b>manual</b></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="screens" aria-label="DS screens">
+            <div class="screen">
+              <div class="bar gov"></div>
+              <div class="head">
+                <p class="t">DS Portal — Create Need</p>
+                <div class="s">Structured form for project title, sector, urgency, skills, engagement type.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Project Title (e.g., Mobile Cardiac Screening)</div>
+                <div class="ui-field">Sector ▾ · Urgency ▾ · District ▾</div>
+                <div class="ui-field" style="min-height:46px">Description & Community Impact...</div>
+                <div class="ui-btn gov">Submit for Review</div>
+              </div>
+            </div>
+
+            <div class="screen">
+              <div class="bar sys"></div>
+              <div class="head">
+                <p class="t">Admin Review Queue</p>
+                <div class="s">Quick approve / request edits before publishing.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Badulla DS — Screening Camp</div><div class="cs">Status: Pending · Missing volunteer count</div></div>
+                <div class="ui-card"><div class="ct">Kandy DS — IT Lab Setup</div><div class="cs">Status: Ready · Pass validation</div></div>
+                <div class="ui-btn sys">Approve & Publish</div>
+              </div>
+            </div>
+
+            <div class="screen">
+              <div class="bar gov"></div>
+              <div class="head">
+                <p class="t">Project Board (Public)</p>
+                <div class="s">Published listings visible with limited details for guests.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Search projects…</div>
+                <div class="ui-card"><div class="ct">Rural Clinic: Specialist Visit</div><div class="cs">Urgent · On-site · 2 weeks</div></div>
+                <div class="ui-card"><div class="ct">School IT Lab Setup</div><div class="cs">Medium · On-site · 1 week</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 2 -->
+      <section class="phase" id="p2" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p2Body">
+          <div class="left">
+            <span class="badge phase">PHASE 02</span>
+            <div class="phase-title">
+              <h2>Volunteer Side — Registration & Verification</h2>
+              <p>Discover → create account → select sectors → upload documents.</p>
+            </div>
+            <span class="badge actor">🌍 Volunteer</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p2Body">
+          <div class="flow">
+            <div class="step vol">
+              <div class="s-num">V · 01</div>
+              <p class="s-title">Discover Platform</p>
+              <p class="s-desc">Guest browsing: categories, districts, urgency (limited details).</p>
+              <div class="tags"><span class="tag">👀 Browse</span><span class="tag">🔎 Filter</span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step vol">
+              <div class="s-num">V · 02</div>
+              <p class="s-title">Create Account</p>
+              <p class="s-desc">Email + password + basic profile (name, country, contact).</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Email verify</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step vol">
+              <div class="s-num">V · 03</div>
+              <p class="s-title">Select Sectors</p>
+              <p class="s-desc">Pick expertise areas to personalize recommended projects.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Feed personalization</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step vol">
+              <div class="s-num">V · 04</div>
+              <p class="s-title">Upload Documents</p>
+              <p class="s-desc">Identity + supporting evidence (CV, licenses, portfolio, links).</p>
+              <div class="tags"><span class="tag manual">👤 <span>User uploads</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step sys">
+              <div class="s-num">SYS · 02</div>
+              <p class="s-title">Automated Verification</p>
+              <p class="s-desc">OCR, cross-check, credential checks where possible. Fallback to manual review.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>AI assisted</span> <b>auto</b></span><span class="tag manual">👤 <span>Fallback</span> <b>manual</b></span></div>
+            </div>
+          </div>
+
+          <div class="screens">
+            <div class="screen">
+              <div class="bar vol"></div>
+              <div class="head">
+                <p class="t">Sign Up</p>
+                <div class="s">Basic account info + verify email.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Full name</div>
+                <div class="ui-field">Email address</div>
+                <div class="ui-field">Password</div>
+                <div class="ui-btn">Create Account</div>
+              </div>
+            </div>
+
+            <div class="screen">
+              <div class="bar vol"></div>
+              <div class="head">
+                <p class="t">Sector Selection</p>
+                <div class="s">Choose areas you can help with.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">🏥 Healthcare  ·  💻 Technology</div>
+                <div class="ui-field">📚 Education  ·  🌿 Environment</div>
+                <div class="ui-btn">Save & Continue</div>
+              </div>
+            </div>
+
+            <div class="screen">
+              <div class="bar vol"></div>
+              <div class="head">
+                <p class="t">Document Upload</p>
+                <div class="s">Secure & encrypted storage.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Passport / NIC</div><div class="cs">Required — upload PDF/JPG</div></div>
+                <div class="ui-card"><div class="ct">CV / License</div><div class="cs">Optional — improves tier</div></div>
+                <div class="ui-btn">Submit for Verification</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 3 -->
+      <section class="phase" id="p3" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p3Body">
+          <div class="left">
+            <span class="badge phase">PHASE 03</span>
+            <div class="phase-title">
+              <h2>System — Automated Verification & Access Gate</h2>
+              <p>OCR → social scan → credential check → verification tier.</p>
+            </div>
+            <span class="badge actor">⚡ Platform</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p3Body">
+          <div class="flow">
+            <div class="step sys">
+              <div class="s-num">SYS · 03</div>
+              <p class="s-title">OCR & Cross-check</p>
+              <p class="s-desc">Extract fields and cross-check against trusted sources (where available).</p>
+              <div class="tags"><span class="tag auto">⚡ <span>OCR</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step sys">
+              <div class="s-num">SYS · 04</div>
+              <p class="s-title">Social Media Scan</p>
+              <p class="s-desc">Public activity scan for red flags + identity consistency signals.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Signal scan</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step sys">
+              <div class="s-num">SYS · 05</div>
+              <p class="s-title">Credential Verification</p>
+              <p class="s-desc">Verify professional body memberships where possible. Manual fallback when needed.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Check</span> <b>auto</b></span><span class="tag manual">👤 <span>Fallback</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gate">
+              <div class="s-num">GATE · 01</div>
+              <p class="s-title">Assign Verification Tier</p>
+              <p class="s-desc">Score-based tier decides access rights to projects and messaging.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Score</span> <b>auto</b></span></div>
+            </div>
+          </div>
+
+          <div class="decision">
+            <div class="h">
+              <div class="l">
+                <strong>VERIFICATION DECISION</strong>
+                <span>Based on document quality, confidence score, and any mismatch signals.</span>
+              </div>
+              <span class="badge phase">GATE</span>
+            </div>
+            <div class="branches">
+              <div class="branch pass">
+                <b>✅ Pass — Fully Verified</b>
+                <p>Full access, verified badge, can apply and message DS.</p>
+              </div>
+              <div class="branch partial">
+                <b>⏳ Partial — Manual Review</b>
+                <p>Needs human check; access limited until resolved.</p>
+              </div>
+              <div class="branch fail">
+                <b>❌ Fail — Rejected</b>
+                <p>Account suspended; appeal option available.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 4 -->
+      <section class="phase" id="p4" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p4Body">
+          <div class="left">
+            <span class="badge phase">PHASE 04</span>
+            <div class="phase-title">
+              <h2>Volunteer — Project Discovery & Application</h2>
+              <p>Personalized feed → project detail → apply (solo/group) → routed to DS.</p>
+            </div>
+            <span class="badge actor">🌍 Verified Volunteer</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p4Body">
+          <div class="flow">
+            <div class="step vol">
+              <div class="s-num">V · 05</div>
+              <p class="s-title">Personalized Feed</p>
+              <p class="s-desc">Filter by sector, district, urgency, remote/on-site, duration.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Auto-filter</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step vol">
+              <div class="s-num">V · 06</div>
+              <p class="s-title">View Project Detail</p>
+              <p class="s-desc">Full brief, DS contact, history, skill requirements.</p>
+              <div class="tags"><span class="tag">📄 Brief</span><span class="tag">📍 Location</span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step vol">
+              <div class="s-num">V · 07</div>
+              <p class="s-title">Apply (Solo or Group)</p>
+              <p class="s-desc">Group leader adds members + roles; everyone must meet minimum tier.</p>
+              <div class="tags"><span class="tag">👥 Group</span><span class="tag">📝 Application</span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step sys">
+              <div class="s-num">SYS · 07</div>
+              <p class="s-title">Route to DS</p>
+              <p class="s-desc">Notify DS with profile, tier, and documents attached.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Routing</span> <b>auto</b></span></div>
+            </div>
+          </div>
+
+          <div class="screens">
+            <div class="screen">
+              <div class="bar vol"></div>
+              <div class="head">
+                <p class="t">Project Board</p>
+                <div class="s">Search + filters + quick cards.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Search projects…</div>
+                <div class="ui-card"><div class="ct">Screening Camp</div><div class="cs">Badulla · On-site · Urgent</div></div>
+                <div class="ui-card"><div class="ct">IT Lab Setup</div><div class="cs">Kandy · On-site · Medium</div></div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar vol"></div>
+              <div class="head">
+                <p class="t">Project Detail</p>
+                <div class="s">Community need + required skills + DS contact.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Skills required</div><div class="cs">Cardiologist · Nurse · Technician</div></div>
+                <div class="ui-card"><div class="ct">Engagement</div><div class="cs">On-site · 2 weeks · 3 volunteers</div></div>
+                <div class="ui-btn">Apply Individually</div>
+                <div class="ui-btn alt">Apply as Group</div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar gate"></div>
+              <div class="head">
+                <p class="t">Group Application</p>
+                <div class="s">Leader adds members + roles + availability.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Leader: Tier 3</div><div class="cs">Dr. Ruwan Silva · Melbourne</div></div>
+                <div class="ui-field">Invite member email…</div>
+                <div class="ui-field">Availability dates…</div>
+                <div class="ui-btn alt">Submit Group</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 5 -->
+      <section class="phase" id="p5" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p5Body">
+          <div class="left">
+            <span class="badge phase">PHASE 05</span>
+            <div class="phase-title">
+              <h2>DS Side — Review & Secondary Verification</h2>
+              <p>Review application → schedule interview (off-platform) → log decision.</p>
+            </div>
+            <span class="badge actor">🏛️ DS / Gov</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p5Body">
+          <div class="note">
+            <div class="i">🔌</div>
+            <p><b>Off-platform:</b> Interview can happen via Zoom/Teams/WhatsApp. Platform only facilitates scheduling + logs outcomes.</p>
+          </div>
+
+          <div class="flow" style="margin-top:12px;">
+            <div class="step gov">
+              <div class="s-num">DS · 04</div>
+              <p class="s-title">Receive Application</p>
+              <p class="s-desc">DS reviews profile, tier, documents, and history.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Notification</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gov">
+              <div class="s-num">DS · 05</div>
+              <p class="s-title">Schedule Video Call</p>
+              <p class="s-desc">Use messaging to set interview time (timezone-aware).</p>
+              <div class="tags"><span class="tag off">🔌 <span>Off-platform</span> <b>call</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gov warn">
+              <div class="s-num">DS · 06</div>
+              <p class="s-title">Conduct Interview</p>
+              <p class="s-desc">Assess expertise depth, fraud indicators, communication and fit.</p>
+              <div class="tags"><span class="tag manual">👤 <span>Assessment</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step gov ok">
+              <div class="s-num">DS · 07</div>
+              <p class="s-title">Log Outcome</p>
+              <p class="s-desc">Approve / reject / request more info; add internal notes.</p>
+              <div class="tags"><span class="tag manual">👤 <span>Decision</span> <b>manual</b></span></div>
+            </div>
+          </div>
+
+          <div class="screens">
+            <div class="screen">
+              <div class="bar gov"></div>
+              <div class="head">
+                <p class="t">DS Review Portal</p>
+                <div class="s">Applicant summary + tier + actions.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Applicant: Group Lead</div><div class="cs">Tier 3 · Verified Professional</div></div>
+                <div class="ui-card"><div class="ct">Docs</div><div class="cs">Passport ✓ · Degree ✓ · LinkedIn ✓</div></div>
+                <div class="ui-btn gov">Schedule Interview</div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar gate"></div>
+              <div class="head">
+                <p class="t">Interview Checklist</p>
+                <div class="s">Simple rubric to standardize DS decisions.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">☑ Identity match</div>
+                <div class="ui-field">☑ Skill confirmation</div>
+                <div class="ui-field">☑ Motivation & intent</div>
+                <div class="ui-field">☑ Local constraints</div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar gov"></div>
+              <div class="head">
+                <p class="t">Decision Logging</p>
+                <div class="s">Approve / reject / request info + notes.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Decision ▾</div>
+                <div class="ui-field" style="min-height:46px;">Internal notes…</div>
+                <div class="ui-btn gov">Save Outcome</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 6 -->
+      <section class="phase" id="p6" aria-expanded="true">
+        <div class="phase-head" role="button" tabindex="0" aria-controls="p6Body">
+          <div class="left">
+            <span class="badge phase">PHASE 06</span>
+            <div class="phase-title">
+              <h2>Engagement — Activation, Tracking & Completion</h2>
+              <p>Notify approval → sign terms → milestone tracking → impact report.</p>
+            </div>
+            <span class="badge actor">✅ All actors</span>
+          </div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="phase-body" id="p6Body">
+          <div class="flow">
+            <div class="step ok">
+              <div class="s-num">SYS · 08</div>
+              <p class="s-title">Notify Volunteer</p>
+              <p class="s-desc">Approval notification + generate Terms of Engagement (ToE) for e-sign.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Notify</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step ok">
+              <div class="s-num">V + DS · 01</div>
+              <p class="s-title">Sign Terms</p>
+              <p class="s-desc">Scope, timeline, milestones, confidentiality, code of conduct.</p>
+              <div class="tags"><span class="tag manual">👤 <span>Both sign</span> <b>manual</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step ok">
+              <div class="s-num">ENG · 01</div>
+              <p class="s-title">Active Engagement</p>
+              <p class="s-desc">Milestone tracker + secure messaging + check-ins and document sharing.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Tracking</span> <b>auto</b></span></div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step ok">
+              <div class="s-num">ENG · 02</div>
+              <p class="s-title">Completion & Impact</p>
+              <p class="s-desc">Feedback + service record + impact dashboard metrics updated.</p>
+              <div class="tags"><span class="tag auto">⚡ <span>Report</span> <b>auto</b></span><span class="tag manual">👤 <span>Feedback</span> <b>manual</b></span></div>
+            </div>
+          </div>
+
+          <div class="screens">
+            <div class="screen">
+              <div class="bar sys"></div>
+              <div class="head">
+                <p class="t">ToE Generator</p>
+                <div class="s">Auto-fill agreement with project details.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Scope · Timeline · Milestones</div>
+                <div class="ui-field">Confidentiality · Code of conduct</div>
+                <div class="ui-btn sys">Send for E-sign</div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar sys"></div>
+              <div class="head">
+                <p class="t">Milestone Tracker</p>
+                <div class="s">Progress + check-in prompts.</div>
+              </div>
+              <div class="body">
+                <div class="ui-card"><div class="ct">Milestone 1</div><div class="cs">Planning complete · ✅</div></div>
+                <div class="ui-card"><div class="ct">Milestone 2</div><div class="cs">On-site delivery · ⏳</div></div>
+                <div class="ui-btn sys">Post Update</div>
+              </div>
+            </div>
+            <div class="screen">
+              <div class="bar gate"></div>
+              <div class="head">
+                <p class="t">Impact Report</p>
+                <div class="s">Metrics and feedback capture.</div>
+              </div>
+              <div class="body">
+                <div class="ui-field">Beneficiaries reached: ____</div>
+                <div class="ui-field">What changed? ____</div>
+                <div class="ui-btn alt">Submit Report</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style="margin-top:18px; color:var(--muted); font-size:12px; line-height:1.6;">
+        Tip: Use <b>Print → Save as PDF</b> to export. You can also copy this template and replace “SEVĀ Connect” with your project name.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ===== Theme persistence =====
+    const root = document.documentElement;
+    const modeLabel = document.getElementById('modeLabel');
+    const savedTheme = localStorage.getItem('wf-theme');
+    if(savedTheme){ root.setAttribute('data-theme', savedTheme); }
+    modeLabel.textContent = root.getAttribute('data-theme') === 'dark' ? 'Dark' : 'Light';
+
+    document.getElementById('toggleTheme').addEventListener('click', () => {
+      const cur = root.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      if(next === 'light') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', next);
+      localStorage.setItem('wf-theme', next);
+      modeLabel.textContent = next === 'dark' ? 'Dark' : 'Light';
+    });
+
+    // ===== Collapsible phases =====
+    const phases = [...document.querySelectorAll('.phase')];
+    function setExpanded(phase, expanded){
+      phase.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      const body = phase.querySelector('.phase-body');
+      body.style.display = expanded ? '' : 'none';
+    }
+    phases.forEach(p => {
+      const head = p.querySelector('.phase-head');
+      const body = p.querySelector('.phase-body');
+      // initial visibility based on aria-expanded
+      const init = p.getAttribute('aria-expanded') !== 'false';
+      body.style.display = init ? '' : 'none';
+
+      head.addEventListener('click', () => {
+        const cur = p.getAttribute('aria-expanded') === 'true';
+        setExpanded(p, !cur);
+      });
+      head.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          const cur = p.getAttribute('aria-expanded') === 'true';
+          setExpanded(p, !cur);
+        }
+      });
+    });
+
+    // Expand/collapse all
+    let allExpanded = true;
+    document.getElementById('toggleAll').addEventListener('click', () => {
+      allExpanded = !allExpanded;
+      phases.forEach(p => setExpanded(p, allExpanded));
+    });
+
+    // Print
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      const isMac = navigator.platform.toLowerCase().includes('mac');
+      const ctrl = isMac ? e.metaKey : e.ctrlKey;
+      if(ctrl && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        document.getElementById('q').focus();
+      }
+      if(e.key.toLowerCase() === 't') document.getElementById('toggleTheme').click();
+      if(e.key.toLowerCase() === 'e') document.getElementById('toggleAll').click();
+      if(e.key.toLowerCase() === 'p') document.getElementById('printBtn').click();
+      if(e.key === 'Escape') document.getElementById('clear').click();
+    });
+
+    // Search / filter steps
+    const q = document.getElementById('q');
+    const clearBtn = document.getElementById('clear');
+
+    function normalize(s){ return (s||'').toLowerCase().trim(); }
+    const searchable = [...document.querySelectorAll('.step, .screen, .branch, .note')];
+
+    function applySearch(term){
+      const t = normalize(term);
+      searchable.forEach(el => {
+        const text = normalize(el.innerText);
+        const match = !t || text.includes(t);
+        el.style.opacity = match ? '1' : '.18';
+        el.style.filter = match ? 'none' : 'grayscale(1)';
+      });
+    }
+    q.addEventListener('input', e => applySearch(e.target.value));
+    clearBtn.addEventListener('click', () => { q.value = ''; applySearch(''); });
+
+    // Scrollspy nav
+    const nav = document.getElementById('nav');
+    const navLinks = [...nav.querySelectorAll('a[data-target]')];
+    const sections = navLinks.map(a => document.getElementById(a.dataset.target)).filter(Boolean);
+
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === entry.target.id));
+        }
+      });
+    }, { root: null, threshold: 0.2 });
+
+    sections.forEach(s => obs.observe(s));
+  </script>
+</body>
+</html>
